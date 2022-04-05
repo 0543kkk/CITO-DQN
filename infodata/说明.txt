@@ -1,0 +1,11 @@
+每个文件夹包含5个csv文件
+Attr_Method_deps.csv 每个类的属性方法依赖的相关类的信息
+CId_importance.csv 使用HITS()算法求得的类的重要性
+CId_Name.csv 每个类的序号与名称信息
+Couple_List.csv 类之间耦合值（方法、属性）
+deps_type.csv 类之间的依赖关系
+NONE = 0; //没关系
+As = 1;	//依赖、简单的聚合、相关标记为AS
+Ag = 2;	//组合，严格生命周期限制的聚合，标记为AG
+I = 3;       //继承
+Dy = 4;   //动态依赖
