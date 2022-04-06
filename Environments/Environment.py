@@ -2,6 +2,13 @@ import numpy as np
 import pandas as pd
 import sys
 
+
+pd.set_option('display.width', 1000)#加了这一行那表格的一行就不会分段出现了
+#显示所有列
+pd.set_option('display.max_columns', None)
+#显示所有行
+pd.set_option('display.max_rows', None)
+
 class Environment():
     '''from to表中，from表示动作类，to表示被依赖类'''
     def __init__(self, filename):
@@ -11,14 +18,18 @@ class Environment():
         Cid_name = 'C:/Users/11203/Desktop/大创/Reinforcement-learning-with-tensorflow-master/contents/CITO-DQN/infodata\\' + filename + '\\CId_Name.csv'  ## Id Name
         Couple_List = 'C:/Users/11203/Desktop/大创/Reinforcement-learning-with-tensorflow-master/contents/CITO-DQN/infodata\\' + filename + '\\Couple_List.csv'  ## From To Couple_value(耦合度)
         deps_type = 'C:/Users/11203/Desktop/大创/Reinforcement-learning-with-tensorflow-master/contents/CITO-DQN/infodata\\' + filename + '\\deps_type.csv'  ##From To Type(代码值) Stype(类型名)
-        df_AM = pd.read_csv(AM_deps)
         df_Im = pd.read_csv(Cid_im)
-        df_Name = pd.read_csv(Cid_name)
+
+        self.df_Name = pd.read_csv(Cid_name)
+        self.df_Name=self.df_Name.set_index('Id')
+
         self.df_Cl = pd.read_csv(Couple_List)
         self.df_Dtype = pd.read_csv(deps_type)
 
-        self.df_AM = pd.DataFrame(df_AM.iloc[:, 1:], index=df_AM.Id, columns=df_AM.columns.delete(0))
-        self.df_AM=self.df_AM.sort_index()
+        self.df_AM = pd.read_csv(AM_deps)
+        self.df_AM=self.df_AM.set_index('Id')
+        # self.df_AM = pd.DataFrame(self.df_AM.iloc[:, :], index=self.df_AM.Id)
+        # self.df_AM=self.df_AM.sort_index()
 
         # '''测试'''
         # sum=0
@@ -44,7 +55,7 @@ class Environment():
 
 
         self.df_Im = pd.DataFrame(df_Im.iloc[:, 1:], index=df_Im.Id, columns=df_Im.columns.delete(0))
-        self.df_Name = pd.DataFrame(df_Name.iloc[:, :], index=df_Name.Id, columns=df_Name.columns.delete(0))
+         # self.df_Name = pd.DataFrame(df_Name.iloc[:, :], index=df_Name.Id, columns=df_Name.columns.delete(0))
         self.class_n = len(df_Im.index)
         self.order = []  # order.append(x)
         self.testOrder = []
@@ -243,9 +254,11 @@ if __name__ == '__main__':
     print('DepsType:\n{}'.format(e.df_Dtype))
     name={}
     for i in range(e.class_n):
-        name.update({i: str(e.df_Name.iloc[i].Name)})
+        name.update({e.df_Name.index[i]: str(e.df_Name.iloc[i].Name)})
     print(name)
-    print(e.df_Name.loc['Id'])
+    print(e.df_Name)
+    print(e.df_AM)
+
     # print(e.calculateNumOfMethoddeps(1,0))
     # print(e.calculateNumOfMethoddeps(20,0))
     # print(e.calculateNumOfMethoddeps(13,0))

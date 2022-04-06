@@ -250,7 +250,7 @@ class RunDQN:
         dtype_result=[]
         couple_result=[]
         for i in range(self.class_n):
-            class_name_result.update({i:str(class_name.iloc[i].Name)})
+            class_name_result.update({str(class_name.index[i]): str(class_name.iloc[i].Name)})
             for j in range(self.class_n):
                 if dtype[i][j]!=0:
                     x=self.tool.num_to_dtype(dtype[i][j])
@@ -258,5 +258,5 @@ class RunDQN:
                     couple_result.append((i,j,couple[i][j]))
         print("classname\n{}".format(class_name))
         print('tab3:{}'.format(couple_result))
-        return result.copy(),dtype_result.copy(),couple_result.copy()
+        return result.copy(),dtype_result.copy(),couple_result.copy(),class_name_result.copy()
 

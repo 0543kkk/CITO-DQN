@@ -110,7 +110,7 @@ class MainWindow(QWidget):
 		self.method_selected = [self.selected1, self.selected2]
 		self.stackWidget.setCurrentIndex(1)
 		run = RunDQN(self.selected1, self.selected2)
-		self.result_dict1,self.result_dtype,self.result_couple=run.runDQN(self.ms.text_print.emit)
+		self.result_dict1,self.result_dtype,self.result_couple,self.result_dict_cname=run.runDQN(self.ms.text_print.emit)
 		print("name\n{}".format(self.result_dict_cname))
 		print(self.result_couple)
 		self.init_stack_result()
