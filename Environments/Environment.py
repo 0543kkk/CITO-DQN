@@ -13,11 +13,18 @@ class Environment():
     '''from to表中，from表示动作类，to表示被依赖类'''
     def __init__(self, filename):
         ##super(filename).__init__()
-        AM_deps = 'C:/Users/11203/Desktop/大创/Reinforcement-learning-with-tensorflow-master/contents/CITO-DQN/infodata\\' + filename + '\\Attr_Method_deps.csv'  ##属性依赖(类) 方法依赖(类) Id Name Set_of_Attrdeps属性依赖的类 Set_of_Methoddeps方法依赖的类
-        Cid_im = 'C:/Users/11203/Desktop/大创/Reinforcement-learning-with-tensorflow-master/contents/CITO-DQN/infodata\\' + filename + '\\CId_importance.csv'  ## Id Importance
-        Cid_name = 'C:/Users/11203/Desktop/大创/Reinforcement-learning-with-tensorflow-master/contents/CITO-DQN/infodata\\' + filename + '\\CId_Name.csv'  ## Id Name
-        Couple_List = 'C:/Users/11203/Desktop/大创/Reinforcement-learning-with-tensorflow-master/contents/CITO-DQN/infodata\\' + filename + '\\Couple_List.csv'  ## From To Couple_value(耦合度)
-        deps_type = 'C:/Users/11203/Desktop/大创/Reinforcement-learning-with-tensorflow-master/contents/CITO-DQN/infodata\\' + filename + '\\deps_type.csv'  ##From To Type(代码值) Stype(类型名)
+        # AM_deps = 'C:/Users/11203/Desktop/大创/Reinforcement-learning-with-tensorflow-master/contents/CITO-DQN/infodata\\' + filename + '\\Attr_Method_deps.csv'  ##属性依赖(类) 方法依赖(类) Id Name Set_of_Attrdeps属性依赖的类 Set_of_Methoddeps方法依赖的类
+        # Cid_im = 'C:/Users/11203/Desktop/大创/Reinforcement-learning-with-tensorflow-master/contents/CITO-DQN/infodata\\' + filename + '\\CId_importance.csv'  ## Id Importance
+        # Cid_name = 'C:/Users/11203/Desktop/大创/Reinforcement-learning-with-tensorflow-master/contents/CITO-DQN/infodata\\' + filename + '\\CId_Name.csv'  ## Id Name
+        # Couple_List = 'C:/Users/11203/Desktop/大创/Reinforcement-learning-with-tensorflow-master/contents/CITO-DQN/infodata\\' + filename + '\\Couple_List.csv'  ## From To Couple_value(耦合度)
+        # deps_type = 'C:/Users/11203/Desktop/大创/Reinforcement-learning-with-tensorflow-master/contents/CITO-DQN/infodata\\' + filename + '\\deps_type.csv'  ##From To Type(代码值) Stype(类型名)
+
+        AM_deps = './infodata\\' + filename + '\\Attr_Method_deps.csv'  ##属性依赖(类) 方法依赖(类) Id Name Set_of_Attrdeps属性依赖的类 Set_of_Methoddeps方法依赖的类
+        Cid_im = './infodata\\' + filename + '\\CId_importance.csv'  ## Id Importance
+        Cid_name = './infodata\\' + filename + '\\CId_Name.csv'  ## Id Name
+        Couple_List = './infodata\\' + filename + '\\Couple_List.csv'  ## From To Couple_value(耦合度)
+        deps_type = './infodata\\' + filename + '\\deps_type.csv'  ##From To Type(代码值) Stype(类型名)
+
         df_Im = pd.read_csv(Cid_im)
 
         self.df_Name = pd.read_csv(Cid_name)

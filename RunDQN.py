@@ -8,7 +8,7 @@ from DQN.doubleDQN import DoubleDQN
 from DQN.duelingDQN import DuelingDQN
 from DQN.Prioritized_Replay_DQN import DQNPrioritizedReplay
 from DQN.CITOAgent import DeepQNetwork
-n_train=600
+n_train=1
 
 
 # 创建进度条主窗口
@@ -225,8 +225,8 @@ class RunDQN:
 if __name__ == '__main__':
     filenames=['ant','ATM','BCEL','daisy','DNS','elevator','Email-spl','JaConTeBe','jboss','JHotDraw','jmeter',
                'jtopas','log4j3','notepad_spl','Ocall','simple','SPM','test','xstream_spl']
-    filename2=['notepad_spl','Email-spl','BCEL']
-    for i in range(1):
+    filename2=['ant','DNS','ATM','elevator','notepad_spl','Email-spl','BCEL','SPM','daisy']
+    for i in range(15):
         for filename in filename2:
             run=RunDQN(filename)
             run.runDQN()
