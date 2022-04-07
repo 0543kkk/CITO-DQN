@@ -11,7 +11,7 @@ from DQN.CNNCITO import DeepQNetwork2
 from DQN.CITOAgent import DeepQNetwork
 import copy
 from util import Util
-n_train=2
+n_train=100
 
 # 创建进度条主窗口
 window = tk.Tk()

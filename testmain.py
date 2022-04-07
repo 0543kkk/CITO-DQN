@@ -25,16 +25,7 @@ def f(min,max):
         s=s*i
     return s
 if __name__ == '__main__':
-    # x=torch.ones(3,27)
-    # y=transto3D(x)
-    # print(y)
-    # y=y[:,np.newaxis, :,:]
-    # print(x)
-    # print(y)
-    s=0
-    while(True):
-        n=int(input('请输入：'))
-        for i in range(1,n+1):
-            s=s+f(n-i,n)
-        print(s)
-        s=0
+    x=[]
+    for i in range(30):
+        x.append((1,2))
+    print(x)

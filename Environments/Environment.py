@@ -75,6 +75,7 @@ class Environment():
         self.MIN = -10000.0
         self.select = np.zeros(self.class_n)
         self.GS = np.zeros(self.class_n)  #是否已经构造过该测试桩
+        self.GSList=[]
         self.deps = np.zeros(self.class_n) #
         self.geneticStubs=0
         self.specificStubs=0
@@ -186,11 +187,11 @@ class Environment():
 
     def getGeneticStub(self):
         '''获取通用测试桩序列'''
-        gsList=[]
-        for i in range(0,self.class_n):
-            if self.GS[i]==1:
-                gsList.append(i)
-        return gsList
+        # gsList=[]
+        # for i in range(0,self.class_n):
+        #     if self.GS[i]==1:
+        #         gsList.append(i)
+        return self.GSList.copy()
 
     def getNumberOfMethoddeps(self):
         return self.MethodDeps
@@ -214,6 +215,7 @@ class Environment():
                 a_cost += self.costMatrix[action, i]
                 if self.GS[i]==0: #通用测试桩尚未构建
                     self.GS[i]=1
+                    self.GSList.append((action,i))
                     self.geneticStubs+=1
                     self.MethodDeps+=self.calculateNumOfMethoddeps(action,i)
                     self.AttrDeps+=self.calculateNumOfAttrdeps(action,i)
