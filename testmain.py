@@ -25,7 +25,7 @@ def f(min,max):
         s=s*i
     return s
 if __name__ == '__main__':
-    x=[]
-    for i in range(30):
-        x.append((1,2))
+    x=torch.Tensor([[1,0,0],[1,0,1],[0,0,0]])
     print(x)
+
+    

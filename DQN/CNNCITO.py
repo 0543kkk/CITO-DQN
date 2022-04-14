@@ -25,8 +25,8 @@ class Net(nn.Module):
         self.pool=self.maxpool
 
         #三层卷积（3×3卷积核），三层最大池化，每经过一层卷积n×n变n-2,经过一层池化变为n/2向上取整
-        self.conv1 = nn.Conv2d(in_channels=1, out_channels=3, kernel_size=3)
-        self.conv2 = nn.Conv2d(in_channels=3, out_channels=6, kernel_size=3)
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=3, kernel_size=3,padding=1)
+        self.conv2 = nn.Conv2d(in_channels=3, out_channels=6, kernel_size=3,padding=1)
        # self.conv3=nn.Conv2d(in_channels=6,out_channels=12,kernel_size=3)
         n=n_feature
         for i in range(2):
@@ -34,11 +34,11 @@ class Net(nn.Module):
             n = n // 2 + 1
         n=n*n*6
 
-        self.fc1 = nn.Linear(24, 64)
+        self.fc1 = nn.Linear(54, 128)
         self.fc1.weight.data.normal_(0, 0.1)   # initialization 初始化网络参数
         # self.fc2 = nn.Linear(128, 64)
         # self.fc2.weight.data.normal_(0, 0.1)  # initialization
-        self.out = nn.Linear(64, n_feature)
+        self.out = nn.Linear(128, n_feature)
         self.out.weight.data.normal_(0, 0.1)   # initialization
 
 
@@ -92,7 +92,81 @@ class Net(nn.Module):
         result = threeDList.clone().detach()
         return result
 
+class Net_pool(nn.Module):
+    def __init__(self, n_feature, n_hidden, n_output):
+        self.n=n_feature
+        super(Net_pool, self).__init__()
+        # self.el = nn.Linear(n_feature, n_hidden)
+        # self.q = nn.Linear(n_hidden, n_output)
+        self.avgpool = nn.AvgPool2d(3,stride=2)
+        self.maxpool=nn.MaxPool2d(2)
+        self.pool=self.avgpool
 
+       #  #三层卷积（3×3卷积核），三层最大池化，每经过一层卷积n×n变n-2,经过一层池化变为n/2向上取整
+       #  self.conv1 = nn.Conv2d(in_channels=1, out_channels=3, kernel_size=3,padding=1)
+       #  self.conv2 = nn.Conv2d(in_channels=3, out_channels=6, kernel_size=3,padding=1)
+       # # self.conv3=nn.Conv2d(in_channels=6,out_channels=12,kernel_size=3)
+       #  n=n_feature
+       #  for i in range(2):
+       #      n = n - 2
+       #      n = n // 2 + 1
+       #  n=n*n*6
+
+        self.fc1 = nn.Linear(36, 128)
+        self.fc1.weight.data.normal_(0, 0.1)   # initialization 初始化网络参数
+        # self.fc2 = nn.Linear(128, 64)
+        # self.fc2.weight.data.normal_(0, 0.1)  # initialization
+        self.out = nn.Linear(128, n_feature)
+        self.out.weight.data.normal_(0, 0.1)   # initialization
+
+
+    def forward(self, x):
+        # n = int(math.sqrt(n) + 1)
+        # x=x+np.array()
+        # x=np.array(x+np.array([0]*(n*n-N_ACTIONS)).reshape(1,n*n-N_ACTIONS))
+        # print(x)
+
+        # m = int(math.sqrt(self.n) + 1) #m=边长
+        # x = x.resize_(m, m) #将x形状变为m*m m-1²<x<m²
+        # print(x)
+        # x = x[np.newaxis, np.newaxis, :]
+
+        x=self.transto3D(x)
+        x=x[:,np.newaxis, :,:]
+        # x=x.permute(1,2,3,0)
+        x = self.pool(x)
+        x=F.relu(x)
+        # x = self.pool(self.conv3(x))
+        # x=F.relu(x)
+        x = x.view(-1, self.num_flat_features(x))
+        x = F.relu(self.fc1(x))
+        # x = F.relu(self.fc2(x))
+        actions_value = self.out(x)
+        return actions_value
+
+    @staticmethod
+    def num_flat_features(x):
+        size = x.size()[1:]
+        num_features = 1
+        for s in size:
+            num_features *= s
+        return num_features
+
+    def transto3D(self,twoDimensionList):
+        num = twoDimensionList.shape[0]
+        n = len(twoDimensionList[0])
+        edge = int(math.sqrt(n) + 1)
+        threeDList = torch.zeros(num, edge, edge)
+        for numcount in range(num):
+            i = 0
+            for j in range(edge):
+                if i >= n: break
+                for k in range(edge):
+                    if i >= n: break
+                    threeDList[numcount, j, k] = twoDimensionList[numcount][i]
+                    i += 1
+        result = threeDList.clone().detach()
+        return result
 
 class DeepQNetwork2():
     def __init__(self, n_actions, n_features, n_hidden=20, learning_rate=0.01, reward_decay=0.9, e_greedy=0.9,
@@ -126,8 +200,8 @@ class DeepQNetwork2():
         return 'CNN-DQN'
 
     def _build_net(self):
-        self.q_eval = Net(self.n_features, self.n_hidden, self.n_actions)
-        self.q_target = Net(self.n_features, self.n_hidden, self.n_actions)
+        self.q_eval = Net_pool(self.n_features, self.n_hidden, self.n_actions)
+        self.q_target = Net_pool(self.n_features, self.n_hidden, self.n_actions)
         self.optimizer = torch.optim.RMSprop(self.q_eval.parameters(), lr=self.lr)
 
     def store_transition(self, s, a, r, s_):

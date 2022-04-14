@@ -12,18 +12,18 @@ pd.set_option('display.max_rows', None)
 class Environment():
     '''from to表中，from表示动作类，to表示被依赖类'''
     def __init__(self, filename):
-        ##super(filename).__init__()
-        # AM_deps = 'C:/Users/11203/Desktop/大创/Reinforcement-learning-with-tensorflow-master/contents/CITO-DQN/infodata\\' + filename + '\\Attr_Method_deps.csv'  ##属性依赖(类) 方法依赖(类) Id Name Set_of_Attrdeps属性依赖的类 Set_of_Methoddeps方法依赖的类
-        # Cid_im = 'C:/Users/11203/Desktop/大创/Reinforcement-learning-with-tensorflow-master/contents/CITO-DQN/infodata\\' + filename + '\\CId_importance.csv'  ## Id Importance
-        # Cid_name = 'C:/Users/11203/Desktop/大创/Reinforcement-learning-with-tensorflow-master/contents/CITO-DQN/infodata\\' + filename + '\\CId_Name.csv'  ## Id Name
-        # Couple_List = 'C:/Users/11203/Desktop/大创/Reinforcement-learning-with-tensorflow-master/contents/CITO-DQN/infodata\\' + filename + '\\Couple_List.csv'  ## From To Couple_value(耦合度)
-        # deps_type = 'C:/Users/11203/Desktop/大创/Reinforcement-learning-with-tensorflow-master/contents/CITO-DQN/infodata\\' + filename + '\\deps_type.csv'  ##From To Type(代码值) Stype(类型名)
+        # super(self,filename).__init__()
+        # AM_deps = './infodata\\' + filename + '\\Attr_Method_deps.csv'  ##属性依赖(类) 方法依赖(类) Id Name Set_of_Attrdeps属性依赖的类 Set_of_Methoddeps方法依赖的类
+        # Cid_im = './infodata\\' + filename + '\\CId_importance.csv'  ## Id Importance
+        # Cid_name = './infodata\\' + filename + '\\CId_Name.csv'  ## Id Name
+        # Couple_List = './infodata\\' + filename + '\\Couple_List.csv'  ## From To Couple_value(耦合度)
+        # deps_type = './infodata\\' + filename + '\\deps_type.csv'  ##From To Type(代码值) Stype(类型名)
 
-        AM_deps = './infodata\\' + filename + '\\Attr_Method_deps.csv'  ##属性依赖(类) 方法依赖(类) Id Name Set_of_Attrdeps属性依赖的类 Set_of_Methoddeps方法依赖的类
-        Cid_im = './infodata\\' + filename + '\\CId_importance.csv'  ## Id Importance
-        Cid_name = './infodata\\' + filename + '\\CId_Name.csv'  ## Id Name
-        Couple_List = './infodata\\' + filename + '\\Couple_List.csv'  ## From To Couple_value(耦合度)
-        deps_type = './infodata\\' + filename + '\\deps_type.csv'  ##From To Type(代码值) Stype(类型名)
+        AM_deps = 'C:\gitRepository\CITO-DQN\infodata\\' + filename + '\\Attr_Method_deps.csv'  ##属性依赖(类) 方法依赖(类) Id Name Set_of_Attrdeps属性依赖的类 Set_of_Methoddeps方法依赖的类
+        Cid_im = 'C:\gitRepository\CITO-DQN\infodata\\' + filename + '\\CId_importance.csv'  ## Id Importance
+        Cid_name = 'C:\gitRepository\CITO-DQN\infodata\\' + filename + '\\CId_Name.csv'  ## Id Name
+        Couple_List = 'C:\gitRepository\CITO-DQN\infodata\\' + filename + '\\Couple_List.csv'  ## From To Couple_value(耦合度)
+        deps_type = 'C:\gitRepository\CITO-DQN\infodata\\' + filename + '\\deps_type.csv'  ##From To Type(代码值) Stype(类型名)
 
         df_Im = pd.read_csv(Cid_im)
 
@@ -121,14 +121,14 @@ class Environment():
     def getClassName(self):
         return self.df_Name.copy()
 
-    def calculateNumOfAttrdeps(self,action,pre):
+    def calculateNumOfAttrdeps(self,action,pre) -> int:
         '''计算属性复杂度'''
         sum=0
         # print(self.df_AM.iloc[3])
         # print(self.df_AM.iloc[3][1])
-        prename=self.df_AM.iloc[pre][0]
-        str=self.df_AM.iloc[action][1]
-        if not isinstance(str,float):
+        prename=self.df_AM.at[pre,'Name']  #查询pre的名称
+        str=self.df_AM.at[action,"Set_of_Attrdeps"]  #属性依赖字段
+        if not isinstance(str,float):   #str不为None
             if prename in str:
                 strlist=str.split(',')
                 n=len(strlist)
@@ -147,8 +147,8 @@ class Environment():
         sum=0
         # print(self.df_AM.iloc[3])
         # print(self.df_AM.iloc[3][1])
-        prename=self.df_AM.iloc[pre][0]
-        str=self.df_AM.iloc[action][2]
+        prename=self.df_AM.at[pre,'Name']
+        str=self.df_AM.at[action,'Set_of_Methoddeps']
         if not isinstance(str,float):
             if prename in str:
                 strlist=str.split(',')
@@ -256,17 +256,17 @@ class Environment():
 
 if __name__ == '__main__':
     e = Environment('test')
-    print('AMdeps:\n{}'.format(e.df_AM))
-    print('importance:\n{}'.format(e.df_Im))
-    print('name:\n{}'.format(e.df_Name))
-    print('Couple:\n{}'.format(e.df_Cl))
-    print('DepsType:\n{}'.format(e.df_Dtype))
-    name={}
-    for i in range(e.class_n):
-        name.update({e.df_Name.index[i]: str(e.df_Name.iloc[i].Name)})
-    print(name)
-    print(e.df_Name)
-    print(e.df_AM)
+    # print('AMdeps:\n{}'.format(e.df_AM))
+    # print('importance:\n{}'.format(e.df_Im))
+    # print('name:\n{}'.format(e.df_Name))
+    # print('Couple:\n{}'.format(e.df_Cl))
+    # print('DepsType:\n{}'.format(e.df_Dtype))
+    # name={}
+    # for i in range(e.class_n):
+    #     name.update({e.df_Name.index[i]: str(e.df_Name.iloc[i].Name)})
+    # print(name)
+    # print(e.df_Name)
+    # print(e.df_AM)
 
     # print(e.calculateNumOfMethoddeps(1,0))
     # print(e.calculateNumOfMethoddeps(20,0))
@@ -276,5 +276,16 @@ if __name__ == '__main__':
     # print(e.calculateNumOfMethoddeps(0,13))
     # e.calculateNumOfMethoddeps(0, 20)
     # e.calculateNumOfMethoddeps(0, 1)
-
+    # print(e.df_AM)
+    # print(e.df_Name)
+    # print(e.df_Name.at[3,'Name'])
+    Asum=0
+    Asum+=e.calculateNumOfAttrdeps(6,0)
+    Asum+=e.calculateNumOfAttrdeps(0,1)
+    Asum+=e.calculateNumOfAttrdeps(3,4)
+    Msum=0
+    Msum+=e.calculateNumOfMethoddeps(6,0)
+    Msum+=e.calculateNumOfMethoddeps(0,1)
+    Msum+=e.calculateNumOfMethoddeps(3,4)
+    print("a:{}  M:{}".format(Asum,Msum))
 

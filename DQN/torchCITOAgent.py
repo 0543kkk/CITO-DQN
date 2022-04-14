@@ -8,7 +8,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
-
+from util import Util
 
 
 # Hyper Parameters
@@ -24,6 +24,8 @@ MEMORY_CAPACITY = 2000
 # N_STATES = env.observation_space.shape[0]
 ENV_A_SHAPE = 0 # if isinstance(env.action_space.sample(), int) else env.action_space.sample().shape     # to confirm the shape
 #isinstance(object 对象, classinfo 类型名) 两者相同返回true 否则false
+
+tool=Util()
 
 class Net(nn.Module):
     def __init__(self,N_ACTIONS,N_STATES):
@@ -129,10 +131,12 @@ class DQN(object):
         q_next = self.target_net(b_s_).detach()     # detach from graph, don't backpropagate
         q_target = b_r + GAMMA * q_next.max(1)[0].view(BATCH_SIZE, 1)   # shape (batch, 1)
         loss = self.loss_func(q_eval, q_target)
+        # print("Qe-Qg:{}".format(q_eval-q_target))
 
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()
+
 
     def plot_cost(self):
         import matplotlib.pyplot as plt

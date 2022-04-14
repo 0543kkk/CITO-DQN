@@ -8,9 +8,11 @@ from DQN.doubleDQN import DoubleDQN
 from DQN.duelingDQN import DuelingDQN
 from DQN.Prioritized_Replay_DQN import DQNPrioritizedReplay
 from DQN.CITOAgent import DeepQNetwork
-n_train=50000
+from DQN.CNNCITO import DeepQNetwork2
+from util import Util
+n_train=100
 
-
+tool=Util()
 # 创建进度条主窗口
 window = tk.Tk()
 window.title('进度条')
@@ -68,14 +70,14 @@ class RunDQN:
             # output_graph=True
         )
         RL_DQN = DQN(self.class_n,self.class_n)
-        # RL_CNN = DeepQNetwork2(self.class_n, self.class_n,
-        #                   learning_rate=0.01,
-        #                   reward_decay=0.9,
-        #                   e_greedy=0.9,
-        #                   replace_target_iter=20,
-        #                   memory_size=20000,
-        #                   # output_graph=True
-        #                   )
+        RL_CNN = DeepQNetwork2(self.class_n, self.class_n,
+                          learning_rate=0.01,
+                          reward_decay=0.9,
+                          e_greedy=0.9,
+                          replace_target_iter=20,
+                          memory_size=20000,
+                          # output_graph=True
+                          )
         RL_dueLing=DuelingDQN(self.class_n, self.class_n,
                           learning_rate=0.01,
                           reward_decay=0.9,
@@ -103,7 +105,7 @@ class RunDQN:
 
 
         start = time.time()
-        RL = RL_DQN
+        RL = RL_CNN
 
         for episode in range(n_train):
 
@@ -124,11 +126,13 @@ class RunDQN:
             #print('ob:')
             #print(observation)
             #print('--------')
+            n_start=time.time()
             while True:
                 action = RL.choose_action(observation)
                 # print('act:')
                 # print(action)
                 observation_,reward,done=self.env.step(action)
+                # print("reward:{}".format(reward))
                 #observation_ = observation_.resize(self.n_sqrt, self.n_sqrt)
                 # print(observation)
                 # print(action)
@@ -168,7 +172,8 @@ class RunDQN:
             a=episode
             if self.mincost<0.8:
                 break
-            print('第{}轮训练，整体测试装复杂度为{}。'.format(episode,cost))
+            n_end=time.time()
+            print('第{}轮训练，整体测试装复杂度为{},所用时间为{}。'.format(episode,cost,n_end-n_start))
         f=open('./experiment','a')
 
         print('您选择的系统是:'+self.filename)
@@ -220,12 +225,15 @@ class RunDQN:
                                     '训练轮数':n_train,'最佳测试序列':self.bestOrder,'整体测试桩复杂度':self.mincost,
                                     '通用测试桩个数':numOfGS,'通用测试桩序列':GS}])
         Df_expData.to_excel('.\DataOfExperiment\experiment.xlsx')
+        tool.save_net(self.filename,RL.method())
+
+
 
 
 if __name__ == '__main__':
     filenames=['ant','ATM','BCEL','daisy','DNS','elevator','Email-spl','JaConTeBe','jboss','JHotDraw','jmeter',
                'jtopas','log4j3','notepad_spl','Ocall','simple','SPM','test','xstream_spl']
-    filename2=['DNS','ATM','elevator','notepad_spl','Email-spl','BCEL','SPM','daisy']
+    filename2=['JaConTeBe','SPM','daisy']
     file=['test']
     for i in range(2):
         for filename in filename2:
